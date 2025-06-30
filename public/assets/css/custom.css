@@ -1,0 +1,31 @@
+.ticket-comment-attachments {
+    border-radius: 15px;
+    width: 65px;
+    height: 65px;
+    margin-right: 3px;
+    margin-left: 3px;
+    margin-bottom: 5px;
+}
+
+.object-fit-cover {
+    object-fit: cover !important;
+}
+
+.private-attachment-border {
+    -webkit-filter:
+        drop-shadow(2px 2px 1px #705ec8)
+        drop-shadow(-2px -2px 1px #705ec8);
+    filter:
+        drop-shadow(3px 3px 1px #705ec8)
+        drop-shadow(-3px -3px 1px #705ec8);
+}
+
+.standard-input-field-border {
+    border-bottom: 1px solid #ebecf1;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+}
+
+.standard-input-field-error-border {
+    border: 1px solid red;
+}

@@ -1,0 +1,206 @@
+.all-reminders {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.all-reminders .current-reminder {
+    min-width: 196px !important;
+    max-width: 196px; !important;
+}
+
+.all-reminders .table, .all-reminders .reminder-table {
+    max-width: calc(100% - 186px) !important;
+    max-height: 122px !important;
+    overflow: auto !important;
+}
+
+.all-reminders .reminder-table th , .all-reminders .reminder-table tr {
+    cursor: default !important;
+    font-size: 12px;
+}
+
+.default-cursor {
+    cursor: default !important;
+}
+
+.mail-log-attachment i {
+    font-size: 16px;
+}
+
+.mail-log-attachment:hover:after {
+    content: attr(data-title);
+    background: #705ec8;
+    border-radius: 4px;
+    position: absolute;
+    min-width: max-content;
+    top: -28px;
+    left: -80px;
+    padding: 3px 8px;
+    display: block;
+    font-size: 11px;
+    color: white;
+}
+
+.custom-reminder-logs {
+    overflow-x: scroll !important;
+}
+
+.custom-reminder-logs .reminder-logs-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+}
+
+.custom-reminder-logs .reminder-logs-container .reminder-log {
+    padding: 4px 0;
+    margin-right: 24px;
+    min-width: calc((100% / 3) - 8px);
+    font-size: 12px;
+    text-align: left;
+}
+
+.custom-reminder-logs .reminder-logs-container .reminder-log::-webkit-scrollbar {
+    max-height: 3px !important;
+}
+.custom-reminder-logs .reminder-logs-container .reminder-log::-webkit-scrollbar::-webkit-scrollbar-track {
+    background: white;
+}
+
+.custom-reminder-logs .reminder-logs-container .reminder-log::-webkit-scrollbar::-webkit-scrollbar-track::-webkit-scrollbar-thumb {
+    background: rgb(112, 94, 200);
+}
+
+.reminder-scroll-bar {
+    overflow-y: scroll !important;
+    scrollbar-color: gray white !important;
+    scrollbar-width: thin !important;
+}
+
+.reminder-scroll-bar:hover {
+    overflow-y: scroll !important;
+    scrollbar-color: gray white !important;
+    scrollbar-width: thin !important;
+}
+
+.reminder-scroll-bar:focus {
+    overflow-y: scroll !important;
+    scrollbar-color: gray white !important;
+    scrollbar-width: thin !important;
+}
+
+.standard-form-input {
+    min-height: 38px; !important;
+}
+
+.accounting-sweet-alert-title {
+    text-decoration: underline;
+}
+
+.accounting-sweet-alert-layout {
+    border: 1px solid #cecece;
+    border-radius: 15px !important;
+}
+
+.reminder-status-table, .payment-logging-table, .deadline-logs-table {
+    width: 100%;
+}
+
+.reminder-status-table tbody tr {
+    cursor: default;
+}
+
+.reminder-status-table tbody td {
+    padding: .5rem !important;
+}
+
+.payment-logging-table thead tr, .deadline-logs-table thead tr {
+    border-bottom: 1px solid black;
+}
+
+.payment-logging-table tr, .deadline-logs-table tr {
+    font-size: .8rem;
+    cursor: default;
+    /*border-bottom: 1px solid black;*/
+}
+
+.payment-logging-table tbody tr, .deadline-logs-table tbody tr {
+    border-bottom: 1px solid #e1e1e1;
+}
+
+.payment-logging-table tbody tr:last-child, .deadline-logs-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.payment-logging-table tbody tr td, .deadline-logs-table tbody tr td {
+    height: 2rem !important;
+}
+
+.payment-logging-table tr td:last-child {
+    width: 2%;
+}
+
+.deadline-logs-table tr td:first-child {
+    width: 30%;
+}
+
+.deadline-logs-table tr td {
+    width: 35%;
+}
+
+.outgoing-mail-logs-table {
+    width: 100%;
+}
+
+.outgoing-mail-logs-table thead tr {
+    border-bottom: 1px solid black;
+}
+
+.outgoing-mail-logs-table tr {
+    font-size: .8rem;
+    cursor: default;
+}
+
+.outgoing-mail-logs-table tbody tr {
+    border-bottom: 1px solid #e1e1e1;
+}
+
+.outgoing-mail-logs-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.outgoing-mail-logs-table tbody tr td {
+    height: 2rem !important;
+}
+
+.outgoing-mail-logs-table tr td:first-child {
+    width: 30%;
+}
+
+.payment-logging-table tr td:last-child a:hover, .deadline-logs-table tr td:last-child a:hover {
+    cursor: pointer;
+}
+
+#payment-history-body tr td:last-child a:hover {
+    cursor:pointer;
+}
+
+input, input:focus, textarea, textarea:focus, select, select:focus, span, span:focus {
+    outline: none !important;
+}
+
+.pointer-cursor {
+    cursor: pointer !important;
+}
+
+/* Accounting Set Reminder Payment History */
+.hide-history {
+    max-height: 183px;
+    overflow: hidden;
+}
+
+/* Attachments Table */
+.w-100-1 {
+    width: calc(100% + 1px) !important;
+}

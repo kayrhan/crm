@@ -1,0 +1,559 @@
+@import url("../assets/iconfonts/font-awesome/css/font-awesome.min.css");
+@font-face {
+  font-family: "Inter-Black";
+  src: url("../fonts/Inter-Black.woff2") format("woff2"), url("../fonts/Inter-Black.woff") format("woff");
+}
+@font-face {
+  font-family: "Inter-ExtraBold";
+  src: url("../fonts/Inter-ExtraBold.woff2") format("woff2"), url("../fonts/Inter-ExtraBold.woff") format("woff");
+}
+@font-face {
+  font-family: "Inter-Bold";
+  src: url("../fonts/Inter-Bold.woff2") format("woff2"), url("../fonts/Inter-Bold.woff") format("woff");
+}
+@font-face {
+  font-family: "Inter-SemiBold";
+  src: url("../fonts/Inter-SemiBold.woff2") format("woff2"), url("../fonts/Inter-SemiBold.woff") format("woff");
+}
+@font-face {
+  font-family: "Inter-Medium";
+  src: url("../fonts/Inter-Medium.woff2") format("woff2"), url("../fonts/Inter-Medium.woff") format("woff");
+}
+@font-face {
+  font-family: "Inter-Regular";
+  src: url("../fonts/Inter-Regular.woff2") format("woff2"), url("../fonts/Inter-Regular.woff") format("woff");
+}
+@font-face {
+  font-family: "Inter-Thin";
+  src: url("../fonts/Inter-Thin.woff2") format("woff2"), url("../fonts/Inter-Thin.woff") format("woff");
+}
+@font-face {
+  font-family: "Inter-Light";
+  src: url("../fonts/Inter-Light.woff2") format("woff2"), url("../fonts/Inter-Light.woff") format("woff");
+}
+@font-face {
+  font-family: "Inter-ExtraLight";
+  src: url("../fonts/Inter-ExtraLight.woff2") format("woff2"), url("../fonts/Inter-ExtraLight.woff") format("woff");
+}
+* {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  overflow: hidden;
+}
+
+ol, ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+}
+
+input {
+  margin: 0;
+  padding: 0;
+}
+input:focus {
+  -webkit-box-shadow: unset !important;
+  -moz-box-shadow: unset !important;
+  -o-box-shadow: unset !important;
+  box-shadow: unset !important;
+  outline: unset !important;
+  border: unset !important;
+}
+
+select:focus {
+  border-color: #dee2e6 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+button {
+  outline: none !important;
+}
+button:focus {
+  outline: none !important;
+}
+
+.container-fluid {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.container {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.btn:focus, .btn.focus {
+  outline: 0 !important;
+  -webkit-box-shadow: unset !important;
+  -moz-box-shadow: unset !important;
+  -o-box-shadow: unset !important;
+  box-shadow: unset !important;
+}
+
+main {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+}
+main .welcome {
+  background: linear-gradient(101.08deg, #201D70 0%, rgba(0, 0, 0, 0.61) 100%), url("../images/login-background.png") center/cover no-repeat;
+  padding: 45px 15%;
+  width: 69%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-content: space-between;
+}
+main .welcome .body {
+  min-height: calc(100% - 84px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+}
+main .welcome .body h1 {
+  font-family: "Inter-SemiBold";
+  font-size: 40px;
+  color: white;
+}
+main .welcome .body hr {
+  border-radius: 4px;
+  background: white;
+  margin: 0;
+  width: 636.47px;
+  height: 2px;
+  opacity: 1;
+}
+main .welcome .body p {
+  font-family: "Inter-Regular";
+  font-size: 14px;
+  color: white;
+}
+main .welcome .body ul {
+  display: flex;
+  flex-direction: column;
+}
+main .welcome .body ul li i {
+  margin-right: 12px;
+  font-size: 14px;
+  color: white;
+}
+main .welcome .body ul li span {
+  font-family: "Inter-Medium";
+  font-size: 14px;
+  color: white;
+}
+main .welcome .footer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+main .welcome .footer .links {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+}
+main .welcome .footer .links li a {
+  font-family: "Inter-Regular";
+  font-size: 12px;
+  color: white;
+}
+main .welcome .footer .links li a:hover {
+  text-decoration: underline;
+}
+main .welcome .footer .links li .link-line {
+  font-family: "Inter-Regular";
+  font-size: 11px;
+  color: white;
+}
+main .welcome .footer .copyright {
+  margin-top: 6px;
+  font-family: "Inter-Regular";
+  font-size: 12px;
+  color: white;
+  text-align: center;
+}
+main .operation {
+  padding: 45px 110px;
+  width: 31%;
+  display: flex;
+  flex-direction: column;
+}
+main .operation .language {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+}
+main .operation .language .language-btn {
+  background: white;
+  font-family: "Inter-Medium";
+  font-size: 14px;
+  color: #1D1868;
+}
+main .operation .language .lang-menu {
+  min-width: 4rem !important;
+}
+main .operation .language .lang-menu li a {
+  font-family: "Inter-Regular";
+  font-size: 14px;
+  color: black;
+}
+main .operation .language .lang-menu li a:active {
+  background: #f8f9fa;
+}
+main .operation .language .lang-menu li .active {
+  background: white;
+  font-family: "Inter-Medium";
+  color: #1D1868;
+}
+main .operation .language .lang-menu li .active:hover {
+  background: #f8f9fa;
+}
+main .operation .login {
+  height: calc(100% - 30px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+main .operation .login .logo {
+  margin-bottom: 60px;
+}
+main .operation .login .login-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+main .operation .login .login-form .input-field {
+  position: relative;
+  margin-bottom: 25px;
+  display: flex;
+  flex-direction: column;
+}
+main .operation .login .login-form .input-field .left-icon {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+}
+main .operation .login .login-form .input-field .right-icon {
+  pointer-events: unset;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+main .operation .login .login-form .input-field .right-icon:hover {
+  cursor: pointer !important;
+}
+main .operation .login .login-form .input-field .input-validation {
+  border: 1px solid #dc3545;
+}
+main .operation .login .login-form .input-field input {
+  border: 1px solid #DADADA;
+  border-radius: 10px !important;
+  background: white !important;
+  min-height: 45px;
+  padding: 0 16px 0 44px;
+  font-family: "Inter-Regular";
+  font-size: 14px;
+}
+main .operation .login .login-form .input-field input::placeholder {
+  font-family: "Inter-Medium";
+  font-size: 14px;
+  color: #87898E;
+}
+main .operation .login .login-form .input-field input:focus {
+  border: 1px solid #DADADA !important;
+}
+main .operation .login .login-form .input-field input[name=password] {
+  padding: 0 44px;
+  font-size: 10px;
+}
+main .operation .login .login-form .input-field .login-error {
+  font-family: "Inter-Regular";
+  font-size: 12px;
+  color: #dc3545;
+}
+main .operation .login .login-form .input-field .remember {
+  position: relative;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: row;
+}
+main .operation .login .login-form .input-field .remember input[type=checkbox] + label {
+  margin-top: 5px;
+  background: white;
+  border: 1px solid #87898E;
+  border-radius: 3px;
+  position: absolute;
+  left: 0;
+  width: 13px;
+  height: 13px;
+  transition: all ease-out 200ms;
+  white-space: nowrap;
+  user-select: none;
+}
+main .operation .login .login-form .input-field .remember input[type=checkbox] + label:after {
+  content: "";
+  transition: all ease-out 200ms;
+  border-bottom: 1px solid #87898E;
+  border-left: 1px solid #87898E;
+  transform-origin: bottom left;
+  transform: rotate(-45deg);
+  position: absolute;
+  top: 5px;
+  left: 4px;
+  width: 0;
+  height: 4px;
+  opacity: 0;
+}
+main .operation .login .login-form .input-field .remember input[type=checkbox] + label:hover {
+  cursor: pointer;
+}
+main .operation .login .login-form .input-field .remember input[type=checkbox]:checked + label:after {
+  opacity: 1;
+  width: 8px;
+}
+main .operation .login .login-form .input-field .remember .remember-label {
+  margin: 0 0 0 20px !important;
+  font-family: "Inter-Regular";
+  font-size: 14px;
+  color: #87898E;
+}
+main .operation .login .login-form .input-field .remember .remember-label:hover {
+  cursor: pointer;
+}
+main .operation .login .login-form .input-field .forget {
+  margin-top: 8px;
+}
+main .operation .login .login-form .input-field .forget a {
+  text-decoration: underline;
+  font-family: "Inter-Regular";
+  font-size: 13px;
+  color: #87898E;
+}
+main .operation .login .login-form .input-field .forget a:hover {
+  cursor: pointer;
+}
+main .operation .login .login-form .go-back {
+  margin-bottom: 25px;
+  font-family: "Inter-Medium";
+  font-size: 14px;
+  color: #1D1868;
+  text-decoration: underline;
+}
+main .operation .login .login-form button {
+  border-radius: 10px;
+  background: #1D1868;
+  outline: none !important;
+  margin-bottom: 45px;
+  width: 100%;
+  min-height: 45px;
+  font-family: "Inter-SemiBold";
+  font-size: 16px;
+  color: white;
+  text-align: center;
+}
+main .operation .login .login-form button:hover {
+  filter: brightness(112%);
+}
+main .operation .login .default-browser {
+  font-family: "Inter-Regular";
+  font-size: 12px;
+  color: #87898E;
+  text-align: center;
+}
+main .operation .login .default-browser a {
+  text-decoration: underline;
+  color: #1D1868;
+}
+
+.modal.animated .modal-dialog {
+  transform: translate(0, 0);
+}
+.modal.effect-slide-in-bottom .modal-dialog {
+  transform: translateY(20%);
+  opacity: 0;
+  transition: all 0.3s;
+}
+.modal.effect-slide-in-bottom.show .modal-dialog {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+#modal-successful .modal-dialog .modal-content .modal-body {
+  padding: 32px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+#modal-successful .modal-dialog .modal-content .modal-body i {
+  margin-bottom: 12px;
+  font-size: 52px;
+  color: #1D1868;
+}
+#modal-successful .modal-dialog .modal-content .modal-body h4 {
+  font-family: "Inter-Bold";
+  color: #1D1868;
+}
+#modal-successful .modal-dialog .modal-content .modal-body p {
+  margin-top: 15px;
+  max-width: 90%;
+  font-family: "Inter-Medium";
+  font-size: 14px;
+  text-align: center;
+  color: black;
+}
+
+#modal-error .modal-dialog .modal-content .modal-body {
+  padding: 32px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+#modal-error .modal-dialog .modal-content .modal-body i {
+  margin-bottom: 12px;
+  font-size: 52px;
+  color: #dc3545;
+}
+#modal-error .modal-dialog .modal-content .modal-body h4 {
+  font-family: "Inter-Bold";
+  color: #dc3545;
+}
+#modal-error .modal-dialog .modal-content .modal-body p {
+  margin-top: 15px;
+  max-width: 90%;
+  font-family: "Inter-Medium";
+  font-size: 14px;
+  text-align: center;
+  color: black;
+}
+
+@media only screen and (max-width: 1820px) {
+  main .welcome {
+    width: 68%;
+  }
+  main .welcome .body h1 {
+    font-size: 34px;
+  }
+  main .welcome .body hr {
+    width: 543.06px
+  }
+  main .operation {""
+    width: 32%;
+  }
+}
+@media only screen and (max-width: 1720px) {
+  main .welcome {
+    width: 67%;
+  }
+  main .operation {
+    width: 33%;
+  }
+}
+@media only screen and (max-width: 1650px) {
+  main .welcome {
+    padding: 45px 12%;
+    width: 65%;
+  }
+  main .operation {
+    width: 35%;
+  }
+}
+@media only screen and (max-width: 1520px) {
+  main .operation {
+    padding: 45px 90px;
+  }
+}
+@media only screen and (max-width: 1420px) {
+  main .welcome {
+    padding: 45px 90px;
+    width: 62%;
+  }
+  main .operation {
+    width: 38%;
+  }
+}
+@media only screen and (max-width: 1320px) {
+  main .welcome {
+    width: 60%;
+  }
+  main .operation {
+    width: 40%;
+  }
+}
+@media only screen and (max-width: 1220px) {
+  main .welcome {
+    display: none;
+  }
+  main .operation {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+  main .operation .login {
+    width: 400px;
+  }
+}
+@media only screen and (max-width: 620px) {
+  main .operation .login {
+    width: 100%;
+  }
+}
+@media only screen and (max-width: 520px) {
+  main .operation {
+    padding: 45px 60px;
+  }
+}
+@media only screen and (max-width: 460px) {
+  main .operation {
+    padding: 45px;
+  }
+}
+@media only screen and (max-width: 400px) {
+  main .operation {
+    padding: 45px 30px;
+  }
+}
+@media only screen and (max-width: 360px) {
+  main .operation {
+    padding: 45px 15px;
+  }
+}
+
+/*# sourceMappingURL=style.css.map */

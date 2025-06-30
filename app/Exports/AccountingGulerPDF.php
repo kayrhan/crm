@@ -1,0 +1,610 @@
+<?php
+
+namespace App\Exports;
+
+
+
+use tFPDF;
+class AccountingGulerPDF extends tFPDF
+{
+    //a4 sizes 210 x 297
+    public $pageH = 297;
+    public $pageW = 210;
+    public $headerH = 50;
+    public $footerH = 36;
+    public $pageBreakmm = 42;//footer + 6
+    public $positionIndent = 5; // positionlar arası boşluk
+    public $thresh; // defined constructor page break threshold değeri
+    public $tableHeaderRowH = 8;
+
+    public $page_indent = 15; // for one side (left 15 right 15)
+    public $sub_total = 0;
+    public $firstHeader = 0;
+    const w = array(10, 24, 84, 20,16,26);
+    public $accounting;
+    public $accounting_datas;
+    public $organization;
+    public $company;
+    public $logo;
+    public $info_mail;
+    public $datas=[];
+    public $total_page = 0;
+    public $sub_totals = [];
+    public $isPageBreak = false;
+    public $textHeight=4;
+    const _mm_px = 0.2645833333;
+    const _logo_ratio = 0.61;
+    public $pageFirst = 1;
+    public function __construct($orientation = 'P', $unit = 'mm', $size = 'A4')
+    {
+        parent::__construct($orientation, $unit, $size);
+        $this->AddFont('DejaVu','','DejaVuSans.ttf',true);
+        $this->AddFont('DejaVu','B','DejaVuSans-Bold.ttf',true);
+        $this->thresh = $this->pageH-$this->pageBreakmm; // page break threshold
+
+
+    }
+
+    function Header()
+    {
+
+
+        parent::Header();
+        $info = getimagesize(public_path('/images/logos/'.$this->logo));
+
+        $img_w = intval($info[0] * self::_mm_px * self::_logo_ratio) ;// get img width
+        $img_h = intval($info[1] * self::_mm_px * self::_logo_ratio); // get img height
+
+        $this->Image(public_path('/images/logos/'.$this->logo), $this->pageW-$this->page_indent-$img_w, $this->page_indent, $img_w, $img_h);
+
+
+
+        if($this->firstHeader == 1) {
+
+            $this->SetY($this->headerH);
+            $this->SetX($this->page_indent);
+            $this->getInvoiceTableHeader(); // row height 8
+            $this->SetXY($this->page_indent,$this->headerH+$this->tableHeaderRowH);
+            $this->SetFont("DejaVu","",9);
+            $this->Cell(($this->pageW/2)-($this->page_indent),5," Transfer","L,B",1,"L");
+            $this->SetXY( ($this->pageW/2),$this->headerH+$this->tableHeaderRowH);
+            $this->sub_totals[$this->total_page] = $this->sub_total;
+            $this->Cell(($this->pageW/2)-($this->page_indent),5,self::convert_price($this->sub_total),"B,R",1,"R");
+            $this->SetY($this->GetY()+5);
+
+        }
+        else{
+            $this->SetY($this->headerH);
+            if($this->firstHeader!=2) {
+                $this->firstHeader = 1;
+            }
+        }
+
+        $this->total_page+=1;
+
+        $Y = $this->GetY();
+        $this->SetFont("DejaVu","",8.3);
+        $this->AliasNbPages();
+        if($this->pageFirst==1){
+            $this->SetY($this->headerH+55);
+            $this->pageFirst = 2;
+        }else{
+            $this->SetY(37);
+
+        }
+
+        $this->Cell(0,10,'Page '.$this->PageNo().'/{nb}',0,0,'R');
+
+        $this->SetY($Y);
+
+
+    }
+
+
+    function Footer()
+    {
+        parent::Footer();
+        //$this->SetY($this->page_indent,$this->pageH-$this->footerH);
+        $line_height = 4;
+        $row_height  = 4;
+        $rowW = [70,50,60];
+        $matrix = [
+            ["Guler Consulting","Kurumsal Danismanlik Hizmetleri Ltd. Sti.","TAX Office: Turkiye Manisa Mesir V.D.","TAX Number: 4191000495","75. Yıl mh. 5310 sk.","No:5, D:1 Manisa / Turkiye"],
+            ["Contact",$this->info_mail,"www.gulcons.com","Tel.: +90 850 850 02 45"],
+            ["Bank Details","T.C. Halk Bankasi","IBAN EURO: TR20 0001 2001 2510 0058 1005 58","IBAN USD:   TR47 0001 2001 2510 0053 1005 95","IBAN TL:      TR55 0001 2001 2510 0010 1022 91" ,"SWIFT/BIC:  TRHBTR2A","Barbaros mahallesi, Sebboy sokak","No: 4/1 34746 Atasehir / Istanbul"],
+        ];
+
+
+        $footer_tmp_Y = $this->pageH-$this->footerH;
+        $this->SetDrawColor(192,222,231);
+        $this->Line($this->page_indent,$this->pageH-$this->footerH, $this->pageW-($this->page_indent),$this->pageH-$this->footerH);
+        $footer_tmp_Y += 1;
+        $tmpW = 0;
+
+        for( $m =0;$m<count($matrix);$m++){
+            for($n = 0;$n<count($matrix[$m]);$n++) {
+                $this->SetXY($this->page_indent+$tmpW, $footer_tmp_Y);
+                if(($m == 0 && $n==0) || ($m == 2 && $n ==0) || ($m==0 && $n==1) || ($m==1 && $n==0))
+                    $this->SetFont("DejaVu", "B", 6.5);
+                else
+                    $this->SetFont("DejaVu", "", 6.5);
+                $this->Cell($rowW[$m], $row_height, $matrix[$m][$n], 0, 1, "L");
+                $footer_tmp_Y += $line_height;
+            }
+
+            $tmpW +=$rowW[$m];
+            $footer_tmp_Y =  $this->pageH-$this->footerH+1;
+        }
+
+
+
+
+    }
+
+
+    public function AcceptPageBreak()
+    {
+        // echo $this->total_page."\n";
+
+        return true;
+    }
+
+    public function getInvoicesPositions(){
+
+        $constY = $this->GetY()+1;
+
+        $tmpX = 0;
+        $accounting_datas = $this->accounting_datas;
+        foreach ($accounting_datas as $accounting_data){
+
+            $this->sub_total+= $accounting_data->total_price;
+            $this->datas[] = ["start"=>["page"=>$this->page,"current"=>$this->total_page,"startY"=>$this->GetY()]];
+            $this->SetXY($this->page_indent + $tmpX, $constY);
+            $this->MultiCell(self::w[0], $this->textHeight, $accounting_data->pos, 0, "L");
+            $tmpX += self::w[0];
+            $this->SetXY($this->page_indent + $tmpX, $constY);
+
+            $this->MultiCell(self::w[1]/2, $this->textHeight, str_replace('.', ',', $accounting_data->quantity), 0, "L");
+            $tmpX += self::w[1]/2;
+            $this->SetXY($this->page_indent + $tmpX, $constY);
+
+            $this->MultiCell(self::w[1]/2, $this->textHeight, $accounting_data->quantity_type, 0, "L");
+            $tmpX += self::w[1]/2;
+            $this->SetXY($this->page_indent + $tmpX, $constY);
+
+            $tmpX+= self::w[2];
+            $this->SetXY($this->page_indent + $tmpX, $constY);
+            $this->MultiCell(self::w[3], $this->textHeight, self::convert_price($accounting_data->unit_price), 0,  "L");
+
+            $tmpX += self::w[3];
+            $this->SetXY($this->page_indent + $tmpX, $constY);
+
+            $this->MultiCell(self::w[4], $this->textHeight, $accounting_data->discount, 0,  "L");
+            $tmpX += self::w[4];
+            $this->SetXY($this->page_indent + $tmpX, $constY);
+
+            $this->MultiCell(self::w[5], $this->textHeight, self::convert_price($accounting_data->total_price), 0, "L");
+            $tmpX += self::w[5];
+
+
+            $tmpX-= self::w[2]+self::w[3] + self::w[4] + self::w[5];
+
+
+
+            $this->SetXY($this->page_indent + $tmpX, $constY);
+
+            $this->MultiCell(self::w[2],4, self::convert_eol($accounting_data->description), 0, "T");
+            $tmpY = $this->GetY();
+
+            $constY= $tmpY+$this->positionIndent;
+            if($constY>=$this->thresh-$this->positionIndent){
+                $this->AddPage();
+
+                //$this->Image(public_path("/images/logos/g1.png"),0,0,$this->pageW,$this->pageH);
+                $constY = $this->headerH+8+8+5;
+                //echo $constY."\n";
+                $this->SetXY($this->page_indent, $constY);
+            }else {
+                //echo $constY."\n";
+                $this->SetXY($this->page_indent, $constY);
+            }
+            $this->datas[] = ["end"=>["page"=>$this->page,"current"=>$this->total_page,"endY"=>$constY,"sub_total"=>$this->sub_total]];
+
+            $tmpX = 0;
+
+
+        }
+
+        $starts = array_column($this->datas,"start");//positionların başlangış bilgileri
+        $ends = array_column($this->datas,"end");//positionların bitiş bilgileri
+
+        $lastPage = $this->page;//positionlar create edildikten sonra line çizdirildiği için son sayfayı yedekliyoruz
+
+        $endY = $this->GetY();//positionlar create edildikten sonraki current Y değerini ydekliyoruz
+
+        for($i=0;$i<count($starts);$i++){
+
+            /*
+             * eğer position başlangıç sayfası ile bitiş sayfası eşit değil ise
+             * start değerine göre çizim yaptırıyoruz
+             *  ardından end değerine göre çizim yaptırıyoruz*/
+            if ($starts[$i]["page"] != $ends[$i]["page"]) {
+                //dd([$starts[$i],$ends[$i]]);
+                $this->page = $starts[$i]["current"];
+                $this->SetDrawColor(0, 0, 0);
+                //dd([$starts[$i]["page"],$ends[$i]["page"],$starts[$i]["current"],$this->page,$starts[$i]["startY"],$ends[$i]["endY"]]);
+
+                if($starts[$i]["startY"]<=$this->thresh){ // start Y değeri thresholddan küçükse çizim yap
+                    //dd($starts[$i]["startY"]);
+
+                    $this->drawInvoiceTable($starts[$i]["startY"],$this->thresh);
+                }
+
+
+                //ara toplam
+                $this->PageBreakTrigger = $this->pageH;//page break triggerını disable ediyoruz çünkü Subtotal'nun yeri belli
+                $this->SetXY($this->page_indent, -$this->pageBreakmm);
+                $this->SetDrawColor(0, 0, 0);
+                $this->SetFont("Arial", "", 9);
+                $this->Cell(($this->pageW - ($this->page_indent * 2)) / 2, 5, "Subtotal", "L,B,T");
+                $this->SetXY($this->page_indent + ($this->pageW - ($this->page_indent * 2)) / 2, -$this->pageBreakmm);
+                $this->Cell(($this->pageW - ($this->page_indent * 2)) / 2, 5, self::convert_price($ends[$i]["sub_total"]), "R,B,T", 1, "R");
+                $this->PageBreakTrigger = $this->thresh;
+                //ara toplam end
+
+                $this->page = $ends[$i]["current"];
+                $this->SetDrawColor(0, 0, 0);
+
+                $this->drawInvoiceTable($this->headerH+$this->tableHeaderRowH+5,$ends[$i]["endY"]);
+
+
+
+            } else {//eğer position başlangıç ve bitiş sayfaları aynı ise current page' e çizim yaptırıyoruz
+
+                $this->page = $starts[$i]["current"];
+                //echo $starts[$i]["current"]."\n";
+                $this->SetDrawColor(0, 0, 0);
+
+                $this->drawInvoiceTable($starts[$i]["startY"],$ends[$i]["endY"]); // başlangıç ve bitiş sayfaları aynı olduğu için aynı indexteki değerleri kullan
+
+
+
+            }
+
+        }
+
+        $excluded_pages = [];
+        for($i=0;$i<count($starts);$i++){
+            $diff = $ends[$i]["current"] - $starts[$i]["current"];
+            if($diff>1){ // eğer 1 position 1 den fazla sayfada uzuyorsa onları alıyoruz sub totallari ile birlikte
+                $excluded_pages[] = ["start"=>$starts[$i]["current"]+1,"end"=>$ends[$i]["current"]-1,"sub_total"=>$ends[$i]["sub_total"]];
+            }
+        }
+
+        //excluded sayfalara line çizdirme ve sub total ekleme
+        for($i=0;$i<count($excluded_pages);$i++){
+            for($k=$excluded_pages[$i]["start"];$k< $excluded_pages[$i]["end"]+1;$k++){
+                $this->page = $k;
+                $this->SetDrawColor(0, 0, 0);
+                $this->drawInvoiceTable($this->headerH+$this->tableHeaderRowH+5,$this->thresh);
+
+                //ara toplam start
+                $this->PageBreakTrigger = $this->pageH;
+                $this->SetXY($this->page_indent, $this->thresh);
+                $this->SetDrawColor(0, 0, 0);
+                $this->SetFont("Arial", "", 9.5);
+                $this->Cell(($this->pageW - ($this->page_indent * 2)) / 2, 5, "Subtotal", "L,B,T");
+                $this->SetXY($this->page_indent + ($this->pageW - ($this->page_indent * 2)) / 2, -$this->pageBreakmm);
+                $this->Cell(($this->pageW - ($this->page_indent * 2)) / 2, 5, self::convert_price($excluded_pages[$i]["sub_total"]), "R,B,T", 1, "R");
+                $this->PageBreakTrigger = $this->thresh;
+                //ara toplam end
+            }
+        }
+
+
+
+
+        $this->page = $lastPage;
+        $this->firstHeader = 2;
+
+        if($endY + $this->tableHeaderRowH+5 >=$this->thresh-5){
+
+            $this->PageBreakTrigger = $this->pageH;
+            $this->SetXY($this->page_indent, $endY);
+            $this->SetDrawColor(0, 0, 0);
+            $this->SetFont("Arial", "", 9);
+            $this->Cell(($this->pageW - ($this->page_indent * 2)) / 2, 5, "Subtotal", "L,B,T");
+            $this->SetXY($this->page_indent + ($this->pageW - ($this->page_indent * 2)) / 2, $endY);
+            $this->Cell(($this->pageW - ($this->page_indent * 2)) / 2, 5, self::convert_price($this->sub_total), "R,B,T", 1, "R");
+            $this->PageBreakTrigger = $this->thresh;
+
+            $this->AddPage();
+            //$this->Image(public_path("/images/logos/g1.png"),0,0,$this->pageW,$this->pageH);
+
+            $this->SetY($this->headerH);
+        }else{
+            $this->SetY($endY);
+        }
+
+        if(floatval(str_replace(',', '.', str_replace('.', '', $this->accounting->total_amount)))>99999.99){
+            $borderPosition=4;
+        }elseif (floatval(str_replace(',', '.', str_replace('.', '', $this->accounting->total_amount)))>9999.99){
+            $borderPosition=2;
+        }else{
+            $borderPosition=0;
+        }
+
+        $this->SetFont("DejaVu","",8);
+        $this->SetX($this->page_indent);
+        $this->Cell(self::w[0]+self::w[1]+self::w[2]+self::w[3]+self::w[4],5,"Net total","L,B,T");
+
+        $this->SetX($this->page_indent + self::w[0]+self::w[1]+self::w[2]+self::w[3]+self::w[4]);
+        $this->Cell(self::w[5],5,$this->accounting->amount." EUR","R,B,T",1,"R");
+
+        $this->SetX($this->page_indent);
+        $this->Cell(self::w[0]+self::w[1]+self::w[2]+self::w[3],5,$this->accounting->kdv." % TAX ","L,B");
+
+        $this->SetX($this->page_indent + self::w[0]+self::w[1]+self::w[2]+self::w[3]-$borderPosition);
+        $this->Cell(self::w[4],5,$this->accounting->amount." EUR","B,R",1,"R"); // kdv dahil olmayan tutar
+
+        $this->SetXY($this->page_indent + self::w[0]+self::w[1]+self::w[2]+self::w[3]+self::w[4]-$borderPosition,$this->GetY()-5);//burada sıkıntı var sanki
+        $this->Cell(self::w[5]+$borderPosition,5,$this->accounting->kdv_amount." EUR","R,B",1,"R"); // kdv tutarı
+
+        $this->SetX($this->page_indent);
+        $this->Cell( self::w[0]+self::w[1]+self::w[2]+self::w[3]+self::w[4]-$borderPosition,4,"","L,R");
+
+        $this->SetX($this->page_indent + self::w[0]+self::w[1]+self::w[2]+self::w[3]+self::w[4]);
+        $this->Cell( self::w[5],4,"","R");
+
+        $this->SetFont("DejaVu","B",9);
+        $this->SetXY($this->page_indent,$this->GetY()+4);
+
+        $this->Cell( self::w[0]+self::w[1]+self::w[2]+self::w[3]+self::w[4]-$borderPosition,4,"Total amount","L,R,B");
+
+        $this->SetX($this->page_indent + self::w[0]+self::w[1]+self::w[2]+self::w[3]+self::w[4]-$borderPosition);
+
+        $this->Cell( self::w[5]+$borderPosition,4,$this->accounting->total_amount." EUR","R,B",1,"R"); // kdv dahil toplam tutar
+
+
+
+
+    }
+
+    public function drawInvoiceTable($y1,$y2){
+        $this->Line($this->page_indent,$y1,$this->page_indent,$y2);
+        $this->Line($this->page_indent +self::w[0],$y1,$this->page_indent+self::w[0],$y2);
+        $this->Line($this->page_indent +self::w[0] + (self::w[1]/2), $y1, $this->page_indent + self::w[0] + (self::w[1]/2), $y2);
+        $this->Line($this->page_indent +self::w[0]+self::w[1],$y1,$this->page_indent + self::w[0]+ self::w[1],$y2);
+        $this->Line($this->page_indent +self::w[0]+self::w[1]+self::w[2],$y1,$this->page_indent+self::w[0]+self::w[1]+ self::w[2],$y2);
+        $this->Line($this->page_indent +self::w[0]+self::w[1]+self::w[2]+self::w[3],$y1,$this->page_indent+self::w[0]+self::w[1]+ self::w[2]+self::w[3],$y2);
+        $this->Line($this->page_indent +self::w[0]+self::w[1]+self::w[2]+self::w[3]+self::w[4],$y1,$this->page_indent+self::w[0]+self::w[1]+ self::w[2]+self::w[3]+self::w[4],$y2);
+        $this->Line($this->page_indent +self::w[0]+self::w[1]+self::w[2]+self::w[3]+self::w[4]+self::w[5],$y1,$this->page_indent+self::w[0]+self::w[1]+ self::w[2]+self::w[3]+self::w[4]+self::w[5],$y2);
+    }
+
+    public function create_pdf($data){
+        $this->accounting = $data["accounting"];
+        $this->organization = $data["organization"];
+        $this->accounting_datas =  $this->accounting->accounting_datas;
+        $this->company = $data["company"];
+
+        if($this->accounting->type == "offer"){
+            $this->accounting->raw_no = "Offer Number: ".$this->accounting->no;
+            $this->logo = $this->company->logo;
+            $this->info_mail = $this->company->info_mail;
+
+        }
+        elseif ($this->accounting->type == "invoice"){
+            if($this->accounting->storno_no) {
+                $this->accounting->raw_no = "Invoice Cancellation: " . $this->accounting->storno_no;
+            }
+            else {
+                $this->accounting->raw_no = "INVOICE: ".$this->accounting->no;
+            }
+
+            $this->logo = $this->company->logo;
+            $this->info_mail = $this->company->info_mail;
+        }
+
+
+        $this->SetAutoPageBreak(true,$this->pageBreakmm);
+
+
+        $this->AddPage();
+        //$this->Image(public_path("/images/logos/g1.png"),0,0,$this->pageW,$this->pageH);
+        $this->SetFont("DejaVu","",7);
+        $this->SetXY($this->page_indent,$this->headerH+10); // customer address space
+        $this->getCustomerAddress();
+        $this->SetFont("DejaVu","",8);
+        $this->SetY($this->headerH+25); // invoice info space
+        $this->getInvoiceInfo();
+        $this->SetXY($this->page_indent,$this->headerH+60); // invoice start point space
+        $this->SetFont("DejaVu","B",12);
+
+        $this->MultiCell($this->pageW - (2 * $this->page_indent),5,$this->accounting->raw_no,0,"L");
+
+        if($this->accounting->storno_no) {
+            $this->SetX($this->page_indent);
+            $this->SetFont("DejaVu","B",7);
+            $this->MultiCell($this->pageW - (2 * $this->page_indent), 4, "of Invoice NO: " . $this->accounting->no, 0, "L");
+        }
+
+        $this->SetFont("DejaVu","",8);
+        $this->Ln(4);
+        $this->SetX($this->page_indent);
+
+        if($this->accounting->storno_no) {
+            $this->MultiCell($this->pageW - (2 * $this->page_indent), $this->textHeight, self::convert_eol($this->accounting->storno_reason), 0, "L"); // storno reason
+        }
+        else {
+            $this->SetFont("DejaVu","B",8);
+            $this->MultiCell($this->pageW - (2 * $this->page_indent), $this->textHeight, self::convert_eol($this->accounting->title), 0, "L"); // title
+            $this->SetFont("DejaVu","",8);
+        }
+
+        $currentY = $this->GetY();
+        $this->SetXY($this->page_indent,$currentY+5);
+        $this->getInvoiceTableHeader();
+
+        $currentY = $this->GetY();
+        $this->SetXY($this->page_indent, $currentY+$this->tableHeaderRowH);
+
+        $this->getInvoicesPositions();
+
+        $this->getInvoiceFooter();
+
+
+        return $this->Output("S"); // return document string
+
+
+    }
+
+
+
+    public function getCustomerAddress(){
+
+        $line_height = 4;
+        $cell_width = 90;
+        $tmp_Y= $this->GetY();
+        $this->MultiCell($this->GetStringWidth("Guler Consulting Ltd. 75. Yıl Mah., 5310. Sk., No:5/1, Yunusemre/MANISA") + 10,$line_height,"Guler Consulting Ltd. 75. Yıl Mah., 5310. Sk., No:5/1, Yunusemre/MANISA",0,1);
+        $this->Line($this->page_indent+1,$tmp_Y+$line_height,$this->GetStringWidth("Guler Consulting Ltd. 75. Yıl Mah., 5310. Sk., No:5/1, Yunusemre/MANISA")+$this->page_indent+1,$tmp_Y+$line_height);
+
+        $tmp_Y+=$line_height+2;
+        $this->SetXY($this->page_indent,$tmp_Y);
+
+        $this->SetFont("DejaVu","",9);
+        $this->Cell($cell_width,$line_height,$this->organization->org_name,0,1,"L"); // organizasyon ismi
+        $tmp_Y+=$line_height;
+        $this->SetXY($this->page_indent,$tmp_Y);
+
+        $this->Cell($cell_width,$line_height,$this->organization->organization_admin,0,1,"L"); // organizasyon sahibi fatura kesilecek kişi
+
+        $tmp_Y+=$line_height;
+        $this->SetXY($this->page_indent,$tmp_Y);
+        $this->Cell($cell_width,$line_height,$this->organization->address,0,1,"L"); // organizasyon adres
+        $tmp_Y+=$line_height;
+        $this->SetXY($this->page_indent,$tmp_Y);
+        $this->Cell($cell_width,$line_height,$this->organization->zip_code." ".$this->organization->city,0,1,"L"); // organizasyon adres
+    }
+
+    public function getInvoiceInfo(){
+        $line_height = 4;
+        $tmp_Y=$this->GetY()-15;
+
+        $editor_lenght = $this->GetStringWidth($this->accounting->editor);
+        $date_lenght = $this->GetStringWidth("00.00.0000");
+        $diff = abs($editor_lenght-$date_lenght);
+        $cell_width = $diff+45;
+
+        $infoX = $this->pageW-$this->page_indent-$cell_width;
+
+        $this->SetXY($infoX,$tmp_Y);
+        $this->Cell($cell_width/2,4,"Customer-ID:",0,0,"L");
+        $this->Cell($cell_width/2,4,$this->organization->customer_no,0,0,"R"); // Customer no
+        $tmp_Y+= $line_height;
+
+        $this->SetXY($infoX,$tmp_Y);
+        $this->Cell($cell_width/2,4,"Editor:",0,0,"L");
+        $this->Cell($cell_width/2,4,$this->accounting->editor,0,0,"R"); // Editor
+        $tmp_Y+= $line_height;
+        if($this->accounting->storno_no==null) {
+            $this->SetXY($infoX, $tmp_Y);
+            $this->Cell($cell_width / 2, 4, "Delivery Date:", 0, 0, "L");
+            $this->Cell($cell_width / 2, 4, $this->accounting->delivery_date, 0, 0, "R"); // lieferdatum
+            $tmp_Y += $line_height;
+        }
+
+        $this->SetXY($infoX,$tmp_Y);
+        $this->Cell($cell_width/2,4,"Date:",0,0,"L");
+        $this->Cell($cell_width/2,4,$this->accounting->date,0,0,"R"); // datum
+
+    }
+
+
+
+    public function getInvoiceTableHeader(){
+        // Column widths
+        $this->SetFont("DejaVu","",8);
+
+        $header = ["Pos.","Quantity","Description",["Unit Price","EUR"],["Discount","%"],["Total Price","EUR"]];
+        $constY = $this->GetY();
+
+        $tmpX = 0;
+        for($i=0;$i<count($header);$i++) {
+            if($i==3||$i==4||$i==5){
+                $this->Cell(self::w[$i], $this->tableHeaderRowH/2, $header[$i][0], "T,R", 1,"C");
+                $this->SetXY($this->page_indent+$tmpX,$constY+4);
+                $tmpX += self::w[$i];
+                $this->Cell(self::w[$i],$this->tableHeaderRowH/2,$header[$i][1],"B,R",1,"C");
+                $this->SetXY($this->page_indent+$tmpX,$constY);
+
+            }else{
+                if($i==2)
+                    $this->Cell(self::w[$i], $this->tableHeaderRowH, $header[$i], 1, 1,"L");
+                else
+                    $this->Cell(self::w[$i], $this->tableHeaderRowH, $header[$i], "L,T,B", 1,"L");
+                $tmpX += self::w[$i];
+                $this->SetXY($this->page_indent + $tmpX, $constY);
+            }
+
+        }
+
+
+    }
+
+
+
+
+
+
+
+    public function getInvoiceFooter(){
+
+
+        $this->SetFont("DejaVu","",8);
+        $currentY = $this->GetY();
+
+        //$Y = $currentY+10;
+
+        $this->SetXY($this->page_indent,$currentY);
+
+        if($this->accounting->type === "invoice" && $this->accounting->storno_no === null) {
+            $this->MultiCell($this->pageW-($this->page_indent*2),$this->textHeight,"",0,"L");
+            $this->SetX($this->page_indent);
+            $this->MultiCell($this->pageW-($this->page_indent*2),$this->textHeight,"Payable within ".$this->accounting->deadline_day." days." ." (".$this->accounting->deadline.")",0,"L");
+            $currentY = $this->GetY()+5;
+        }else{
+            $currentY = $this->GetY()+5;
+        }
+
+
+
+        $this->MultiCell($this->pageW-($this->page_indent*2),1,"",0,"L");
+        $this->SetXY($this->page_indent,$currentY);
+        $this->MultiCell($this->pageW-($this->page_indent*2),$this->textHeight,self::convert_eol($this->accounting->footnote),0,"L");
+
+
+    }
+
+
+
+    public static function convert_price($price){
+
+        return number_format($price,2,",",".");
+    }
+
+    public static function convert_eol($text){
+
+        $text = htmlspecialchars_decode($text);
+        $text = str_replace("<p><br></p><p></p>","<br>",$text);
+        $text = str_replace("</p><p></p>","<br>",$text);
+        $text = str_replace("<br></p><p>","<br>",$text);
+        $text = str_replace("</p><p>","<br>",$text);
+        $text = str_replace("<p>","",$text);
+        $text = str_replace("</p>","",$text);
+        $text = str_replace("<br>",PHP_EOL,$text);
+        $text = str_replace("&nbsp;","",$text);
+
+        return $text;
+    }
+
+}

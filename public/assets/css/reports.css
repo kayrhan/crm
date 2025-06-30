@@ -1,0 +1,51 @@
+.organization-report-logs-table {
+    display: block;
+    min-width: 100%;
+    width: 100%;
+    max-height: 785px !important;
+    overflow-y: scroll !important;
+}
+
+.organization-report-logs-table thead tr th {
+    padding: .5rem .5rem .345rem .5rem;
+}
+
+.organization-report-logs-table tbody {
+}
+
+.organization-report-logs-table tbody tr {
+    min-height: 38px !important;
+}
+
+.organization-report-logs-table tbody tr td {
+    padding: .5rem;
+}
+
+.organization-report-logs-table tbody tr td:first-child {
+    min-width: 300px !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.organization-report-logs-table tbody tr td:nth-child(2) {
+    min-width: 150px !important;
+}
+
+.organization-report-logs-table tbody tr td:nth-child(3) {
+    min-width: 200px !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.organization-report-logs-table tbody tr td:last-child {
+    min-width: 347px !important;
+}
+
+.organization-report-logs-table .limited-table {
+    overflow: hidden !important;
+    max-height: 760px !important;
+}

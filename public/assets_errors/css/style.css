@@ -1,0 +1,73 @@
+@font-face {
+  font-family: "Inter Black";
+  src: url("../fonts/Inter-Black.woff2") format("woff2"), url("../fonts/Inter-Black.woff") format("woff");
+  font-weight: 900; }
+@font-face {
+  font-family: "Inter Regular";
+  src: url("../fonts/Inter-Regular.woff2") format("woff2"), url("../fonts/Inter-Regular.woff") format("woff");
+  font-weight: 400; }
+body {
+  margin: 0; }
+
+section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  min-height: 100vh; }
+  section .mainBg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.65) 0%, rgba(0, 26, 255, 0.47) 100%), url(../images/bg.png) center center/cover no-repeat; }
+    section .mainBg:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-color: rgba(0, 0, 0, 0.4); }
+  section img {
+    width: 283px; }
+  section .main {
+    margin-top: 35px;
+    border: 3px solid white;
+    border-radius: 20px;
+    padding: 20px 40px 40px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden; }
+    section .main .blurBg {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: linear-gradient(to right, rgba(203, 203, 203, 0.17) 0.17%, rgba(169, 169, 169, 0.47) 100%);
+      backdrop-filter: blur(8px);
+      z-index: -1; }
+    section .main h1, section .main h2, section .main p {
+      text-align: center;
+      margin: 0;
+      color: white; }
+    section .main h1 {
+      font-family: "Inter Black";
+      font-size: 150px; }
+    section .main h2 {
+      font-family: "Inter Black";
+      font-size: 26px; }
+    section .main p {
+      font-family: "Inter Regular";
+      font-size: 18px;
+      margin-top: 10px; }
+
+/*# sourceMappingURL=style.css.map */
